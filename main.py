@@ -35,7 +35,7 @@ async def crear_componente(datos: Componente, session: AsyncSession = Depends(ge
 
 @app.put("/componentes/{id}", response_model=ComponenteConId)
 async def actualizar_componente(
-    id: int, datos: ComponenteActualizar, session: AsyncSession = Depends(get_session)
+    id: int, datos: ComponenteActualizado, session: AsyncSession = Depends(get_session)
 ):
     componente = await session.get(Componente, id)
     if not componente:
