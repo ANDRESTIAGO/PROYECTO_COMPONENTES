@@ -4,8 +4,6 @@ from models import *
 from datetime import datetime
 from typing import List, Optional
 
-# --- COMPONENTES ---
-
 async def crear_componente(comp: Componente, session: AsyncSession) -> Componente:
     session.add(comp)
     await session.commit()
@@ -42,8 +40,6 @@ async def eliminar_componente(id: int, session: AsyncSession) -> Optional[Compon
     await session.delete(comp)
     await session.commit()
     return comp
-
-# --- DISTRIBUIDORES ---
 
 async def crear_distribuidor(distri: Distribuidores, session: AsyncSession) -> Distribuidores:
     session.add(distri)

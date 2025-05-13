@@ -1,6 +1,7 @@
 from sqlmodel import SQLModel, Field
 from typing import Optional
 from datetime import datetime
+from pydantic import BaseModel
 
 class Distribuidores(SQLModel, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
@@ -25,3 +26,23 @@ class ComponenteActualizar(SQLModel):
     tipo: Optional[str] = None
     marca: Optional[str] = None
     modelo: Optional[str] = None
+
+class ComponenteConId(BaseModel):
+    id: int
+    nombre: str
+    tipo: str
+    marca: str
+    modelo: str
+    fecha_creacion: datetime
+    fecha_modificacion: datetime
+
+    class Config:
+        orm_mode = True 
+
+class DistriConId(BaseModel):
+    id: int
+    nombre: str
+    direccion: str
+
+    class Config:
+        orm_mode = True
