@@ -1,8 +1,7 @@
 from fastapi import FastAPI, HTTPException, Depends
 from sqlalchemy.ext.asyncio import AsyncSession
 from typing import List, Optional
-from models import Componente, ComponenteConId, ComponenteActualizar
-from models import Distribuidores, DistriConId, DistriActualizado
+from models import Componente, ComponenteConId, ComponenteActualizado, DistriConId, DistriActualizado
 from db import get_session, init_db
 
 app = FastAPI(title="API para Componentes y Distribuidores", docs_url="/docs")
