@@ -1,29 +1,27 @@
-
+from sqlmodel import SQLModel, Field
 from typing import Optional
-from pydantic import BaseModel, Field
+from datetime import datetime
 
-class Distribuidores(BaseModel):
-    nombre: str = Field(..., min_length=2, max_length=50)
-    direccion: str = Field(..., min_length=2, max_length=50)
-    
-class Componente(BaseModel):
-    nombre: str = Field(..., min_length=2, max_length=50)
-    tipo: str = Field(..., min_length=2, max_length=30)
-    marca: str = Field(..., min_length=2, max_length=30)
-    modelo: str = Field(..., min_length=2, max_length=30)
+class Distribuidores(SQLModel, table=True):
+    id: Optional[int] = Field(default=None, primary_key=True)
+    nombre: str
+    direccion: str
 
-class ComponenteConId(Componente):
-    id: int
+class DistribuidorActualizar(SQLModel):
+    nombre: Optional[str] = None
+    direccion: Optional[str] = None
 
-class DistriConId(Distribuidores):
-    id: int
+class Componente(SQLModel, table=True):
+    id: Optional[int] = Field(default=None, primary_key=True)
+    nombre: str
+    tipo: str
+    marca: str
+    modelo: str
+    fecha_creacion: datetime = Field(default_factory=datetime.utcnow)
+    fecha_modificacion: datetime = Field(default_factory=datetime.utcnow)
 
-class ComponenteActualizado(BaseModel):
-    nombre: Optional[str] = Field(None, min_length=2, max_length=50)
-    tipo: Optional[str] = Field(None, min_length=2, max_length=30)
-    marca: Optional[str] = Field(None, min_length=2, max_length=30)
-    modelo: Optional[str] = Field(None, min_length=2, max_length=30)
-
-class DistriActualizado(BaseModel):
-    nombre: Optional[str] = Field(None, min_length=2, max_length=50)
-    direccion: Optional[str] = Field(None, min_length=2, max_length=30)
+class ComponenteActualizar(SQLModel):
+    nombre: Optional[str] = None
+    tipo: Optional[str] = None
+    marca: Optional[str] = None
+    modelo: Optional[str] = None
