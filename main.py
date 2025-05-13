@@ -11,6 +11,7 @@ from models import (
     DistribuidorActualizar,
     DistriConId,
 )
+from operations import *
 
 
 app = FastAPI()
