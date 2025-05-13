@@ -1,0 +1,4 @@
+id,nombre,tipo,marca,modelo
+1,string,string,string,string
+11,string,procesador,ryzen,5600g
+12,string,procesador,intel,10000k

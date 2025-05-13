@@ -1,0 +1,90 @@
+
+### Mapa de Endpoints
+
+#### **Componentes**
+1. **GET `/optener_todos_los_componentes`**
+   - **Descripción**: Obtiene todos los componentes.
+   - **Respuesta**: Lista de componentes (`list[ComponenteConId]`).
+
+2. **GET `/mostrar_componentes_eliminados`**
+   - **Descripción**: Obtiene todos los componentes eliminados.
+   - **Respuesta**: Lista de componentes eliminados (`list[ComponenteConId]`).
+
+3. **GET `/optener_un_componente/{componente_id}`**
+   - **Descripción**: Obtiene un componente por su ID.
+   - **Parámetro**:
+     - `componente_id` (int): ID del componente.
+   - **Respuesta**: Componente con el ID proporcionado (`ComponenteConId`).
+
+4. **GET `/optener_componente_con_atributo/{componente_tipo}/{componente_modelo}`**
+   - **Descripción**: Busca un componente por tipo y modelo.
+   - **Parámetros**:
+     - `componente_tipo` (str): Tipo del componente.
+     - `componente_modelo` (str): Modelo del componente.
+   - **Respuesta**: Componente con el tipo y modelo proporcionados (`ComponenteConId`).
+
+5. **POST `/agregar_componente`**
+   - **Descripción**: Agrega un nuevo componente.
+   - **Cuerpo**: Objeto `Componente`.
+   - **Respuesta**: Componente creado (`ComponenteConId`).
+
+6. **PUT `/actualizar_componente/{componente_id}`**
+   - **Descripción**: Actualiza un componente existente.
+   - **Parámetro**:
+     - `componente_id` (int): ID del componente a actualizar.
+   - **Cuerpo**: Objeto `ComponenteActualizado`.
+   - **Respuesta**: Componente actualizado (`ComponenteConId`).
+
+7. **DELETE `/eliminar_componente/{componente_id}`**
+   - **Descripción**: Elimina un componente.
+   - **Parámetro**:
+     - `componente_id` (int): ID del componente a eliminar.
+   - **Respuesta**: Componente eliminado (`ComponenteConId`).
+
+#### **Distribuidores**
+1. **GET `/opetener_todos_los_distribuidores`**
+   - **Descripción**: Obtiene todos los distribuidores.
+   - **Respuesta**: Lista de distribuidores (`list[DistriConId]`).
+
+2. **GET `/optener_distribuidores_eliminados`**
+   - **Descripción**: Obtiene todos los distribuidores eliminados.
+   - **Respuesta**: Lista de distribuidores eliminados (`list[DistriConId]`).
+
+3. **GET `/optener_un_distribuidor/{componente_id}`**
+   - **Descripción**: Obtiene un distribuidor por su ID.
+   - **Parámetro**:
+     - `componente_id` (int): ID del distribuidor.
+   - **Respuesta**: Distribuidor con el ID proporcionado (`DistriConId`).
+
+4. **GET `/optener_distribuidor_con_atributo/{distribuidor_nombre}`**
+   - **Descripción**: Busca un distribuidor por nombre.
+   - **Parámetro**:
+     - `distribuidor_nombre` (str): Nombre del distribuidor.
+   - **Respuesta**: Distribuidor con el nombre proporcionado (`DistriConId`).
+
+5. **POST `/agregar_distribuidor`**
+   - **Descripción**: Agrega un nuevo distribuidor.
+   - **Cuerpo**: Objeto `Distribuidores`.
+   - **Respuesta**: Distribuidor creado (`DistriConId`).
+
+6. **PUT `/actualizar_distribuidor/{distribuidor_id}`**
+   - **Descripción**: Actualiza un distribuidor existente.
+   - **Parámetro**:
+     - `distribuidor_id` (int): ID del distribuidor a actualizar.
+   - **Cuerpo**: Objeto `DistriActualizado`.
+   - **Respuesta**: Distribuidor actualizado (`DistriConId`).
+
+7. **DELETE `/eliminar_distribuidor/{distribuidor_id}`**
+   - **Descripción**: Elimina un distribuidor.
+   - **Parámetro**:
+     - `distribuidor_id` (int): ID del distribuidor a eliminar.
+   - **Respuesta**: Distribuidor eliminado (`DistriConId`).
+
+#### **Otros**
+1. **GET `/`**
+   - **Descripción**: Punto de inicio de la API.
+   - **Respuesta**: Mensaje de bienvenida.
+
+2. **Excepción Global**
+   - **Descripción**: Maneja excepciones de tipo `HTTPException`.
+   - **Respuesta**: JSON con el mensaje de error, detalle y ruta.
