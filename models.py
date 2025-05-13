@@ -46,6 +46,10 @@ class ComponenteConId(BaseModel):
     class Config:
         from_attributes = True  
 
+class DistriActualizado(BaseModel):
+    nombre: Optional[str] = Field(None, min_length=2, max_length=50)
+    direccion: Optional[str] = Field(None, min_length=2, max_length=50)
+
 class DistriConId(BaseModel):
     id: int
     nombre: str
