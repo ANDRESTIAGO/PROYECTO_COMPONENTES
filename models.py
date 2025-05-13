@@ -1,5 +1,6 @@
 from pydantic import BaseModel
 from sqlmodel import SQLModel, Field
+from typing import Optional
 
 class ComponenteBase(SQLModel):
     nombre: str
