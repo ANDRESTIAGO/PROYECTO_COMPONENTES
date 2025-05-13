@@ -1,109 +1,81 @@
-from starlette.responses import JSONResponse
-from fastapi import FastAPI, Depends, HTTPException
-from sqlalchemy.ext.asyncio import AsyncSession
+import csv
+from pathlib import Path
+from typing import Optional
 from sqlmodel import select
-from db import get_session, init_db
-from models import (
-    ComponenteConId,
-    Componente,
-    ComponenteActualizado,
-    Distribuidores,
-    DistribuidorActualizar,
-    DistriConId,
-)
-from operations import *
+from sqlalchemy.ext.asyncio import AsyncSession
+from models import Componente, ComponenteConId, ComponenteActualizar
+from models import Distribuidores, DistriConId, DistriActualizado
 
+# Funciones relacionadas con componentes
+async def obtener_todos_componentes(session: AsyncSession) -> list[Componente]:
+    result = await session.execute(select(Componente))
+    return result.scalars().all()
 
-app = FastAPI()
+async def obtener_componente(id: int, session: AsyncSession) -> Optional[Componente]:
+    return await session.get(Componente, id)
 
+async def crear_componente(datos: Componente, session: AsyncSession) -> Componente:
+    nuevo_componente = Componente.from_orm(datos)
+    session.add(nuevo_componente)
+    await session.commit()
+    await session.refresh(nuevo_componente)
+    return nuevo_componente
 
-@app.get("/optener_todos_los_componentes", response_model=list[ComponenteConId])
-async def obtener_todos(session: AsyncSession = Depends(get_session)):
-    componentes = await obtener_componentes(session)
-    return [ComponenteConId.from_orm(comp) for comp in componentes]
+async def actualizar_componente(id: int, datos: ComponenteActualizar, session: AsyncSession) -> Optional[Componente]:
+    componente = await session.get(Componente, id)
+    if not componente:
+        return None
 
+    for key, value in datos.dict(exclude_unset=True).items():
+        setattr(componente, key, value)
 
-@app.get("/optener_un_componente/{componente_id}", response_model=ComponenteConId)
-async def obtener_uno(componente_id: int, session: AsyncSession = Depends(get_session)):
-    comp = await obtener_componente(componente_id, session)
-    if not comp:
-        raise HTTPException(status_code=404, detail="Componente no encontrado")
-    return ComponenteConId.from_orm(comp)
+    session.add(componente)
+    await session.commit()
+    await session.refresh(componente)
+    return componente
 
+async def eliminar_componente(id: int, session: AsyncSession) -> Optional[Componente]:
+    componente = await session.get(Componente, id)
+    if not componente:
+        return None
 
-@app.get("/optener_componente_con_atributo/{componente_tipo}/{componente_modelo}", response_model=ComponenteConId)
-async def obtener_atributo_componente(
-    componente_tipo: str,
-    componente_modelo: str,
-    session: AsyncSession = Depends(get_session),
-):
-    comp = await buscar_componente(componente_tipo, componente_modelo, session)
-    if not comp:
-        raise HTTPException(status_code=404, detail="Componente no encontrado")
-    return ComponenteConId.from_orm(comp)
+    await session.delete(componente)
+    await session.commit()
+    return componente
 
+# Funciones relacionadas con distribuidores
+async def obtener_todos_distribuidores(session: AsyncSession) -> list[Distribuidores]:
+    result = await session.execute(select(Distribuidores))
+    return result.scalars().all()
 
-@app.get("/optener_todos_los_distribuidores", response_model=list[DistriConId])
-async def obtener_todos_distribuidores(session: AsyncSession = Depends(get_session)):
-    distribuidores = await obtener_distribuidores(session)
-    return [DistriConId.from_orm(dist) for dist in distribuidores]
+async def obtener_distribuidor(id: int, session: AsyncSession) -> Optional[Distribuidores]:
+    return await session.get(Distribuidores, id)
 
+async def crear_distribuidor(datos: Distribuidores, session: AsyncSession) -> Distribuidores:
+    nuevo_distribuidor = Distribuidores.from_orm(datos)
+    session.add(nuevo_distribuidor)
+    await session.commit()
+    await session.refresh(nuevo_distribuidor)
+    return nuevo_distribuidor
 
-@app.get("/optener_un_distribuidor/{distribuidor_id}", response_model=DistriConId)
-async def obtener_un_distribuidor(distribuidor_id: int, session: AsyncSession = Depends(get_session)):
-    dist = await obtener_distribuidor(distribuidor_id, session)
-    if not dist:
-        raise HTTPException(status_code=404, detail="Distribuidor no encontrado")
-    return DistriConId.from_orm(dist)
+async def actualizar_distribuidor(id: int, datos: DistriActualizado, session: AsyncSession) -> Optional[Distribuidores]:
+    distribuidor = await session.get(Distribuidores, id)
+    if not distribuidor:
+        return None
 
+    for key, value in datos.dict(exclude_unset=True).items():
+        setattr(distribuidor, key, value)
 
-@app.post("/agregar_componente", response_model=ComponenteConId)
-async def agregar_componente(comp: Componente, session: AsyncSession = Depends(get_session)):
-    nuevo_comp = await crear_componente(comp, session)
-    return ComponenteConId.from_orm(nuevo_comp)
+    session.add(distribuidor)
+    await session.commit()
+    await session.refresh(distribuidor)
+    return distribuidor
 
+async def eliminar_distribuidor(id: int, session: AsyncSession) -> Optional[Distribuidores]:
+    distribuidor = await session.get(Distribuidores, id)
+    if not distribuidor:
+        return None
 
-@app.post("/agregar_distribuidor", response_model=DistriConId)
-async def agregar_distribuidor(distri: Distribuidores, session: AsyncSession = Depends(get_session)):
-    nuevo_distri = await crear_distribuidor(distri, session)
-    return DistriConId.from_orm(nuevo_distri)
-
-
-@app.put("/actualizar_componente/{componente_id}", response_model=ComponenteConId)
-async def actualizar_componente(
-    componente_id: int,
-    comp_update: ComponenteActualizado,
-    session: AsyncSession = Depends(get_session),
-):
-    actualizado = await actualizar_componente(componente_id, comp_update, session)
-    if not actualizado:
-        raise HTTPException(status_code=404, detail="Componente no modificado")
-    return ComponenteConId.from_orm(actualizado)
-
-
-@app.put("/actualizar_distribuidor/{distribuidor_id}", response_model=DistriConId)
-async def actualizar_distribuidor(
-    distribuidor_id: int,
-    comp_update: DistribuidorActualizar,
-    session: AsyncSession = Depends(get_session),
-):
-    actualizado = await actualizar_distribuidor(distribuidor_id, comp_update, session)
-    if not actualizado:
-        raise HTTPException(status_code=404, detail="Distribuidor no modificado")
-    return DistriConId.from_orm(actualizado)
-
-
-@app.delete("/eliminar_componente/{componente_id}", response_model=ComponenteConId)
-async def eliminar_un_componente(componente_id: int, session: AsyncSession = Depends(get_session)):
-    eliminado = await eliminar_componente(componente_id, session)
-    if not eliminado:
-        raise HTTPException(status_code=404, detail="Componente no eliminado")
-    return ComponenteConId.from_orm(eliminado)
-
-
-@app.delete("/eliminar_distribuidor/{distribuidor_id}", response_model=DistriConId)
-async def eliminar_un_distribuidor(distribuidor_id: int, session: AsyncSession = Depends(get_session)):
-    eliminado = await eliminar_distribuidor(distribuidor_id, session)
-    if not eliminado:
-        raise HTTPException(status_code=404, detail="Distribuidor no eliminado")
-    return DistriConId.from_orm(eliminado)
+    await session.delete(distribuidor)
+    await session.commit()
+    return distribuidor
