@@ -18,10 +18,8 @@ class Componente(SQLModel, table=True):
     tipo: str
     marca: str
     modelo: str
-    fecha_creacion: datetime = Field(default_factory=datetime.utcnow)
-    fecha_modificacion: datetime = Field(default_factory=datetime.utcnow)
 
-class ComponenteActualizar(SQLModel):  
+class ComponenteActualizar(SQLModel):
     nombre: Optional[str] = None
     tipo: Optional[str] = None
     marca: Optional[str] = None
