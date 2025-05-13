@@ -1,59 +1,24 @@
-from sqlmodel import SQLModel, Field
-from typing import Optional
-from datetime import datetime
 from pydantic import BaseModel
+from sqlmodel import SQLModel, Field
 
-class Distribuidores(BaseModel):
-    nombre: str = Field(..., min_length=2, max_length=50)
-    direccion: str = Field(..., min_length=2, max_length=50)
-
-class DistribuidorActualizar(SQLModel):
-    nombre: Optional[str] = None
-    direccion: Optional[str] = None
-
-class Componente(BaseModel):
-    nombre: str = Field(..., min_length=2, max_length=50)
-    tipo: str = Field(..., min_length=2, max_length=30)
-    marca: str = Field(..., min_length=2, max_length=30)
-    modelo: str = Field(..., min_length=2, max_length=30)
-
-
-class ComponenteActualizado(SQLModel):
-    nombre: Optional[str] = None
-    tipo: Optional[str] = None
-    marca: Optional[str] = None
-    modelo: Optional[str] = None
-
-class ComponenteActualizar(BaseModel):
-    nombre: Optional[str] = Field(None, min_length=2, max_length=50)
-    tipo: Optional[str] = Field(None, min_length=2, max_length=30)
-    marca: Optional[str] = Field(None, min_length=2, max_length=30)
-    modelo: Optional[str] = Field(None, min_length=2, max_length=30)
-
-class DistriActualizar(BaseModel):
-    nombre: Optional[str] = Field(None, min_length=2, max_length=50)
-    direccion: Optional[str] = Field(None, min_length=2, max_length=30)
-
-class ComponenteConId(BaseModel):
-    id: int
+class ComponenteBase(SQLModel):
     nombre: str
-    tipo: str
-    marca: str
-    modelo: str
-    fecha_creacion: datetime
-    fecha_modificacion: datetime
+    descripcion: Optional[str] = None
+    precio: float
+
+class Componente(ComponenteBase, table=True):
+    id: Optional[int] = Field(default=None, primary_key=True)
+
+class ComponenteConId(ComponenteBase):
+    id: int
 
     class Config:
-        from_attributes = True  
+        from_attributes = True
 
-class DistriActualizado(BaseModel):
-    nombre: Optional[str] = Field(None, min_length=2, max_length=50)
-    direccion: Optional[str] = Field(None, min_length=2, max_length=50)
-
-class DistriConId(BaseModel):
-    id: int
-    nombre: str
-    direccion: str
+class ComponenteActualizar(SQLModel):
+    nombre: Optional[str] = None
+    descripcion: Optional[str] = None
+    precio: Optional[float] = None
 
     class Config:
-        from_attributes = True  
+        from_attributes = True
