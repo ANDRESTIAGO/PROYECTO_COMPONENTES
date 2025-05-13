@@ -2,10 +2,7 @@ from fastapi import FastAPI, Depends, HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlmodel import select
 from db import get_session, init_db
-from models import (
-    ComponenteConId, Componente, ComponenteActualizado,
-    DistriConId, Distribuidores, DistriActualizado
-)
+from models import *
 from crud import (
     obtener_componentes, obtener_componente, buscar_componente,
     crear_componente, actualizar_componente, eliminar_componente,

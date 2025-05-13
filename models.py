@@ -21,7 +21,7 @@ class Componente(SQLModel, table=True):
     fecha_creacion: datetime = Field(default_factory=datetime.utcnow)
     fecha_modificacion: datetime = Field(default_factory=datetime.utcnow)
 
-class ComponenteActualizar(SQLModel):
+class ComponenteActualizar(SQLModel):  
     nombre: Optional[str] = None
     tipo: Optional[str] = None
     marca: Optional[str] = None
@@ -37,7 +37,7 @@ class ComponenteConId(BaseModel):
     fecha_modificacion: datetime
 
     class Config:
-        orm_mode = True 
+        from_attributes = True  
 
 class DistriConId(BaseModel):
     id: int
@@ -45,4 +45,4 @@ class DistriConId(BaseModel):
     direccion: str
 
     class Config:
-        orm_mode = True
+        from_attributes = True  
