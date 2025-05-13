@@ -19,7 +19,7 @@ class Componente(SQLModel, table=True):
     marca: str
     modelo: str
 
-class ComponenteActualizar(SQLModel):
+class ComponenteActualizado(SQLModel):
     nombre: Optional[str] = None
     tipo: Optional[str] = None
     marca: Optional[str] = None
