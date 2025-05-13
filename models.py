@@ -2,24 +2,31 @@ from pydantic import BaseModel
 from sqlmodel import SQLModel, Field
 from typing import Optional
 
-class ComponenteBase(SQLModel):
-    nombre: str
-    descripcion: Optional[str] = None
-    precio: float
+class Distribuidores(BaseModel):
+    nombre: str = Field(..., min_length=2, max_length=50)
+    direccion: str = Field(..., min_length=2, max_length=50)
+    
+class Componente(BaseModel):
+    nombre: str = Field(..., min_length=2, max_length=50)
+    tipo: str = Field(..., min_length=2, max_length=30)
+    marca: str = Field(..., min_length=2, max_length=30)
+    modelo: str = Field(..., min_length=2, max_length=30)
 
-class Componente(ComponenteBase, table=True):
-    id: Optional[int] = Field(default=None, primary_key=True)
-
-class ComponenteConId(ComponenteBase):
+class ComponenteConId(Componente):
     id: int
 
-    class Config:
-        from_attributes = True
+class DistriConId(Distribuidores):
+    id: int
 
-class ComponenteActualizar(SQLModel):
-    nombre: Optional[str] = None
-    descripcion: Optional[str] = None
-    precio: Optional[float] = None
+class ComponenteActualizado(BaseModel):
+    nombre: Optional[str] = Field(None, min_length=2, max_length=50)
+    tipo: Optional[str] = Field(None, min_length=2, max_length=30)
+    marca: Optional[str] = Field(None, min_length=2, max_length=30)
+    modelo: Optional[str] = Field(None, min_length=2, max_length=30)
+
+class DistriActualizado(BaseModel):
+    nombre: Optional[str] = Field(None, min_length=2, max_length=50)
+    direccion: Optional[str] = Field(None, min_length=2, max_length=30)
 
     class Config:
         from_attributes = True
