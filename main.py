@@ -3,12 +3,12 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlmodel import select
 from db import get_session, init_db
 from models import *
-from crud import (
+"""from crud import (
     obtener_componentes, obtener_componente, buscar_componente,
     crear_componente, actualizar_componente, eliminar_componente,
     obtener_distribuidores, obtener_distribuidor,
     crear_distribuidor, actualizar_distribuidor, eliminar_distribuidor
-)
+)"""
 
 app = FastAPI()
 
