@@ -5,8 +5,14 @@ from sqlmodel import select
 from sqlalchemy.ext.asyncio import AsyncSession
 from models import Componente, ComponenteConId, ComponenteActualizar
 from models import Distribuidores, DistriConId, DistriActualizado
+from fastapi import FastAPI
 
-# Funciones relacionadas con componentes
+app = FastAPI()
+
+@app.get("/")
+async def root():
+    return {"message": "Hola, mundo"}
+
 async def obtener_todos_componentes(session: AsyncSession) -> list[Componente]:
     result = await session.execute(select(Componente))
     return result.scalars().all()
@@ -43,7 +49,6 @@ async def eliminar_componente(id: int, session: AsyncSession) -> Optional[Compon
     await session.commit()
     return componente
 
-# Funciones relacionadas con distribuidores
 async def obtener_todos_distribuidores(session: AsyncSession) -> list[Distribuidores]:
     result = await session.execute(select(Distribuidores))
     return result.scalars().all()
