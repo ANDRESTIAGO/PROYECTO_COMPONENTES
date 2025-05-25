@@ -3,7 +3,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from typing import List, Optional
 from models import Componente, Distribuidores, ComponenteConId, ComponenteActualizado, DistriConId, DistriActualizado
 from db import get_session, init_db
-from sqlalchemy import select
+from sqlalchemy import select 
 
 
 app = FastAPI(title="API para Componentes y Distribuidores", docs_url="/docs")
