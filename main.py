@@ -3,7 +3,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from typing import List, Optional
 from models import Componente, Distribuidores, ComponenteConId, ComponenteActualizado, DistriConId, DistriActualizado
 from db import get_session, init_db
-from sqlalchemy import select 
+from sqlalchemy import select
 
 
 app = FastAPI(title="API para Componentes y Distribuidores", docs_url="/docs")
@@ -108,44 +108,3 @@ async def eliminar_distribuidor(id: int, session: AsyncSession = Depends(get_ses
     await session.delete(distribuidor)
     await session.commit()
     return DistriConId.from_orm(distribuidor)
-
-def verificar_compatibilidad_ram_y_procesador(componentes):
-    """
-    Verifica si el socket de la RAM y la marca del procesador son compatibles.
-
-    :param componentes: Lista de componentes.
-    :return: True si son compatibles, False en caso contrario.
-    """
-    ram = next((comp for comp in componentes if comp.tipo.lower() == "ram"), None)
-    procesador = next((comp for comp in componentes if comp.tipo.lower() == "procesador"), None)
-
-    if not ram or not procesador:
-        return False  # Si falta alguno, no se puede verificar
-
-    return ram.socket == procesador.socket
-
-@app.post("/verificar-compatibilidad")
-async def verificar_compatibilidad_componentes(ids: List[int], session: AsyncSession = Depends(get_session)):
-    """
-    Endpoint para verificar la compatibilidad de componentes según el socket de la RAM y la marca del procesador.
-
-    :param ids: Lista de IDs de componentes.
-    :param session: Sesión de la base de datos.
-    :return: Mensaje indicando si los componentes son compatibles.
-    """
-    if len(ids) < 2:
-        raise HTTPException(status_code=400, detail="Se requieren al menos dos IDs de componentes para la verificación.")
-
-    componentes = []
-    for comp_id in ids:
-        componente = await session.get(ComponenteConId, comp_id)
-        if not componente:
-            raise HTTPException(status_code=404, detail=f"Componente con ID {comp_id} no encontrado.")
-        componentes.append(componente)
-
-    compatibles = verificar_compatibilidad_ram_y_procesador(componentes)
-
-    if compatibles:
-        return {"mensaje": "Los componentes son compatibles."}
-    else:
-        return {"mensaje": "Los componentes no son compatibles."}
