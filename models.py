@@ -10,7 +10,7 @@ class Distribuidores(SQLModel, table=True):
 # Modelo base para componentes con mapeo SQL
 class Componente(SQLModel, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
-    nombre: str = Field(..., min_length=2, max_length=50)
+    socket: str = Field(..., min_length=2, max_length=50)
     tipo: str = Field(..., min_length=2, max_length=30)
     marca: str = Field(..., min_length=2, max_length=30)
     modelo: str = Field(..., min_length=2, max_length=30)
@@ -25,7 +25,7 @@ class DistriConId(Distribuidores):
 
 # Modelo para actualizar componentes
 class ComponenteActualizado(SQLModel):
-    nombre: Optional[str] = Field(None, min_length=2, max_length=50)
+    socket: Optional[str] = Field(None, min_length=2, max_length=50)
     tipo: Optional[str] = Field(None, min_length=2, max_length=30)
     marca: Optional[str] = Field(None, min_length=2, max_length=30)
     modelo: Optional[str] = Field(None, min_length=2, max_length=30)
