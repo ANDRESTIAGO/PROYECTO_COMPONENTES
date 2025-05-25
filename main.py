@@ -108,3 +108,39 @@ async def eliminar_distribuidor(id: int, session: AsyncSession = Depends(get_ses
     await session.delete(distribuidor)
     await session.commit()
     return DistriConId.from_orm(distribuidor)
+
+def verificar_compatibilidad(sockets: List[str]) -> bool:
+    """
+    Verifica si todos los sockets de los componentes proporcionados son iguales.
+
+    :param sockets: Lista de sockets de los componentes.
+    :return: True si son compatibles, False en caso contrario.
+    """
+    return len(set(sockets)) == 1
+
+@app.post("/verificar-compatibilidad")
+async def verificar_compatibilidad_componentes(ids: List[int], session: AsyncSession = Depends(get_session)):
+    """
+    Endpoint para verificar la compatibilidad de componentes según sus sockets.
+
+    :param ids: Lista de IDs de componentes.
+    :param session: Sesión de la base de datos.
+    :return: Mensaje indicando si los componentes son compatibles.
+    """
+    if len(ids) < 2:
+        raise HTTPException(status_code=400, detail="Se requieren al menos dos IDs de componentes para la verificación.")
+
+    componentes = []
+    for comp_id in ids:
+        componente = await session.get(ComponenteConId, comp_id)
+        if not componente:
+            raise HTTPException(status_code=404, detail=f"Componente con ID {comp_id} no encontrado.")
+        componentes.append(componente)
+
+    sockets = [comp.socket for comp in componentes]
+    compatibles = verificar_compatibilidad(sockets)
+
+    if compatibles:
+        return {"mensaje": "Los componentes son compatibles."}
+    else:
+        return {"mensaje": "Los componentes no son compatibles."}
