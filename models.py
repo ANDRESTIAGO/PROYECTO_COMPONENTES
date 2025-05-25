@@ -7,7 +7,7 @@ class Distribuidores(SQLModel, table=True):
     nombre: str = Field(..., min_length=2, max_length=50)
     direccion: str = Field(..., min_length=2, max_length=50)
 
-# Modelo base para componentes con mapeo SQL
+# Modelo base para componentes con mapeo SQLl
 class Componente(SQLModel, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
     socket: str = Field(..., min_length=2, max_length=50)
